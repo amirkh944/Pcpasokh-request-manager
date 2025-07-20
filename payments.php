@@ -87,6 +87,9 @@ $isDark = $theme === 'dark';
                         <a href="dashboard.php?theme=<?php echo $theme; ?>" class="px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
                             <i class="fas fa-home ml-1"></i>داشبورد
                         </a>
+                        <a href="new_request.php?theme=<?php echo $theme; ?>" class="px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                            <i class="fas fa-plus-circle ml-1"></i>درخواست جدید
+                        </a>
                         <a href="requests.php?theme=<?php echo $theme; ?>" class="px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
                             <i class="fas fa-list ml-1"></i>درخواست‌ها
                         </a>
@@ -97,6 +100,15 @@ $isDark = $theme === 'dark';
                             <i class="fas fa-plus ml-1"></i>پرداخت جدید
                         </a>
                     </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden">
+                        <button id="mobile-menu-button" class="<?php echo $isDark ? 'text-gray-300' : 'text-gray-700'; ?> hover:bg-gray-100 p-2 rounded">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                    
+                    <span class="<?php echo $isDark ? 'text-gray-300' : 'text-gray-700'; ?> hidden sm:block">خوش آمدید، <?php echo $_SESSION['username']; ?></span>
                     
                     <!-- Theme Toggle -->
                     <div class="flex space-x-2">
@@ -113,7 +125,27 @@ $isDark = $theme === 'dark';
                     <a href="logout.php" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">خروج</a>
                 </div>
             </div>
-        </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden <?php echo $isDark ? 'bg-gray-700' : 'bg-white'; ?> border-t">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="dashboard.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                        <i class="fas fa-home ml-2"></i>داشبورد
+                    </a>
+                    <a href="new_request.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                        <i class="fas fa-plus-circle ml-2"></i>درخواست جدید
+                    </a>
+                    <a href="requests.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                        <i class="fas fa-list ml-2"></i>درخواست‌ها
+                    </a>
+                    <a href="customers.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                        <i class="fas fa-users ml-2"></i>مشتریان
+                    </a>
+                    <a href="add_payment.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded bg-green-500 text-white hover:bg-green-600">
+                        <i class="fas fa-plus ml-2"></i>پرداخت جدید
+                    </a>
+                </div>
+            </div>
     </nav>
 
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -449,5 +481,26 @@ $isDark = $theme === 'dark';
         });
     </script>
     <?php endif; ?>
+    
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // Auto-hide mobile menu on larger screens
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
