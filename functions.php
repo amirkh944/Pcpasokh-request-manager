@@ -456,7 +456,7 @@ function getFinancialStatsByDateRange($startDate = null, $endDate = null) {
     $params = [];
     
     if ($startDate && $endDate) {
-        $whereClause = 'WHERE DATE(created_at) BETWEEN ? AND ?';
+        $whereClause = 'AND DATE(created_at) BETWEEN ? AND ?';
         $params = [$startDate, $endDate];
     }
     
@@ -467,7 +467,7 @@ function getFinancialStatsByDateRange($startDate = null, $endDate = null) {
     $stmt->execute($params);
     $totalIncome = $stmt->fetchColumn();
     
-    // بدهکاری
+    // بدهکاری  
     $stmt = $pdo->prepare("SELECT COALESCE(SUM(amount), 0) as total_debt 
                           FROM payments 
                           WHERE payment_type = 'بدهکاری' $whereClause");
