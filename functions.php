@@ -291,4 +291,198 @@ function fa2en($str) {
     $en = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
     return str_replace($fa, $en, $str);
 }
+
+// توابع آماری برای چارت‌ها
+
+// تابع دریافت آمار هفتگی درآمد
+function getWeeklyStats() {
+    global $pdo;
+    
+    $stats = [];
+    for ($i = 6; $i >= 0; $i--) {
+        $date = date('Y-m-d', strtotime("-$i days"));
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(amount), 0) as daily_income 
+                              FROM payments 
+                              WHERE payment_type = 'واریز' 
+                              AND DATE(created_at) = ?");
+        $stmt->execute([$date]);
+        $income = $stmt->fetchColumn();
+        
+        $stats[] = [
+            'date' => jalali_date('m/d', strtotime($date)),
+            'income' => (float)$income
+        ];
+    }
+    
+    return $stats;
+}
+
+// تابع دریافت آمار ماهانه درآمد
+function getMonthlyStats() {
+    global $pdo;
+    
+    $stats = [];
+    for ($i = 11; $i >= 0; $i--) {
+        $year = date('Y', strtotime("-$i months"));
+        $month = date('m', strtotime("-$i months"));
+        
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(amount), 0) as monthly_income 
+                              FROM payments 
+                              WHERE payment_type = 'واریز' 
+                              AND YEAR(created_at) = ? AND MONTH(created_at) = ?");
+        $stmt->execute([$year, $month]);
+        $income = $stmt->fetchColumn();
+        
+        $stats[] = [
+            'month' => jalali_date('Y/m', strtotime("$year-$month-01")),
+            'income' => (float)$income
+        ];
+    }
+    
+    return $stats;
+}
+
+// تابع دریافت آمار وضعیت درخواست‌ها
+function getStatusStats() {
+    global $pdo;
+    
+    $stmt = $pdo->query("SELECT status, COUNT(*) as count 
+                        FROM requests 
+                        GROUP BY status");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// تابع جستجوی درخواست‌ها
+function searchRequests($query) {
+    global $pdo;
+    
+    $searchTerm = "%$query%";
+    
+    $stmt = $pdo->prepare("SELECT r.*, c.name as customer_name, c.phone as customer_phone, c.email as customer_email
+                          FROM requests r 
+                          JOIN customers c ON r.customer_id = c.id 
+                          WHERE c.name LIKE ? 
+                             OR c.phone LIKE ? 
+                             OR r.imei1 LIKE ? 
+                             OR r.imei2 LIKE ?
+                             OR r.tracking_code LIKE ?
+                          ORDER BY r.created_at DESC");
+    
+    $stmt->execute([$searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// تابع ارسال پیامک با سرویس SMS.ir
+function sendSMS($phone, $message, $patternCode = null) {
+    $apiKey = 'YOUR_SMS_IR_API_KEY'; // کلید API خود را اینجا قرار دهید
+    $lineNumber = 'YOUR_LINE_NUMBER'; // شماره خط خود را اینجا قرار دهید
+    
+    if ($patternCode) {
+        // ارسال با الگو
+        $url = 'https://api.sms.ir/v1/send/pattern';
+        $data = [
+            'patternCode' => $patternCode,
+            'mobile' => $phone,
+            'parameters' => $message
+        ];
+    } else {
+        // ارسال متنی ساده
+        $url = 'https://api.sms.ir/v1/send/bulk';
+        $data = [
+            'lineNumber' => $lineNumber,
+            'messageText' => $message,
+            'mobiles' => [$phone]
+        ];
+    }
+    
+    $headers = [
+        'Content-Type: application/json',
+        'x-api-key: ' . $apiKey
+    ];
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    $result = json_decode($response, true);
+    
+    if ($httpCode == 200 && isset($result['status']) && $result['status'] == 1) {
+        return ['success' => true, 'message' => 'پیامک با موفقیت ارسال شد'];
+    } else {
+        return ['success' => false, 'message' => 'خطا در ارسال پیامک: ' . ($result['message'] ?? 'خطای نامشخص')];
+    }
+}
+
+// تابع دریافت آمار مالی در بازه زمانی
+function getFinancialStatsByDateRange($startDate = null, $endDate = null) {
+    global $pdo;
+    
+    $whereClause = '';
+    $params = [];
+    
+    if ($startDate && $endDate) {
+        $whereClause = 'WHERE DATE(created_at) BETWEEN ? AND ?';
+        $params = [$startDate, $endDate];
+    }
+    
+    // درآمد
+    $stmt = $pdo->prepare("SELECT COALESCE(SUM(amount), 0) as total_income 
+                          FROM payments 
+                          WHERE payment_type = 'واریز' $whereClause");
+    $stmt->execute($params);
+    $totalIncome = $stmt->fetchColumn();
+    
+    // بدهکاری
+    $stmt = $pdo->prepare("SELECT COALESCE(SUM(amount), 0) as total_debt 
+                          FROM payments 
+                          WHERE payment_type = 'بدهکاری' $whereClause");
+    $stmt->execute($params);
+    $totalDebt = $stmt->fetchColumn();
+    
+    return [
+        'total_income' => $totalIncome,
+        'total_debt' => $totalDebt,
+        'net_income' => $totalIncome - $totalDebt
+    ];
+}
+
+// تابع دریافت تراکنش‌ها با فیلتر
+function getTransactionsWithFilter($startDate = null, $endDate = null, $customerId = null) {
+    global $pdo;
+    
+    $whereConditions = [];
+    $params = [];
+    
+    if ($startDate && $endDate) {
+        $whereConditions[] = 'DATE(p.created_at) BETWEEN ? AND ?';
+        $params[] = $startDate;
+        $params[] = $endDate;
+    }
+    
+    if ($customerId) {
+        $whereConditions[] = 'p.customer_id = ?';
+        $params[] = $customerId;
+    }
+    
+    $whereClause = !empty($whereConditions) ? 'WHERE ' . implode(' AND ', $whereConditions) : '';
+    
+    $stmt = $pdo->prepare("SELECT p.*, c.name as customer_name, c.phone as customer_phone, 
+                                 r.title as request_title, r.tracking_code
+                          FROM payments p 
+                          LEFT JOIN customers c ON p.customer_id = c.id 
+                          LEFT JOIN requests r ON p.request_id = r.id 
+                          $whereClause
+                          ORDER BY p.created_at DESC");
+    
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
