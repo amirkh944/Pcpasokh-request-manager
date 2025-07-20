@@ -1,0 +1,19 @@
+RewriteEngine On
+
+# Remove .php extension from URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ index.php?page=$1 [NC,L]
+
+# Handle theme parameter
+RewriteCond %{QUERY_STRING} ^theme=([^&]*)$
+RewriteRule ^([^\.]+)$ index.php?page=$1&theme=%1 [NC,L]
+
+# Prevent direct access to includes directory
+RewriteRule ^includes/ - [F,L]
+
+# Prevent direct access to templates directory
+RewriteRule ^templates/ - [F,L]
+
+# Prevent direct access to views directory
+RewriteRule ^views/ - [F,L]
