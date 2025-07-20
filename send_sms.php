@@ -38,31 +38,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             
             if ($smsResult['success']) {
-                $message = '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                              <i class="fas fa-check-circle ml-2"></i>
-                              پیامک با موفقیت ارسال شد به شماره ' . $customer['phone'] . '
+                $message = '<div class="bg-green-50 border border-green-200 text-green-800 px-6 py-4 rounded-xl mb-6">
+                              <div class="flex items-center">
+                                  <i class="fas fa-check-circle text-green-500 text-xl ml-3"></i>
+                                  <div>
+                                      <h4 class="font-semibold">ارسال موفق</h4>
+                                      <p class="text-sm mt-1">پیامک با موفقیت ارسال شد به شماره ' . $customer['phone'] . '</p>
+                                  </div>
+                              </div>
                             </div>';
             } else {
-                $message = '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                              <i class="fas fa-exclamation-circle ml-2"></i>
-                              خطا در ارسال پیامک: ' . $smsResult['message'] . '
+                $message = '<div class="bg-red-50 border border-red-200 text-red-800 px-6 py-4 rounded-xl mb-6">
+                              <div class="flex items-center">
+                                  <i class="fas fa-exclamation-circle text-red-500 text-xl ml-3"></i>
+                                  <div>
+                                      <h4 class="font-semibold">خطا در ارسال</h4>
+                                      <p class="text-sm mt-1">' . $smsResult['message'] . '</p>
+                                  </div>
+                              </div>
                             </div>';
             }
         } catch (Exception $e) {
-            $message = '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                          <i class="fas fa-exclamation-triangle ml-2"></i>
-                          خطای سیستمی: ' . $e->getMessage() . '
+            $message = '<div class="bg-red-50 border border-red-200 text-red-800 px-6 py-4 rounded-xl mb-6">
+                          <div class="flex items-center">
+                              <i class="fas fa-exclamation-triangle text-red-500 text-xl ml-3"></i>
+                              <div>
+                                  <h4 class="font-semibold">خطای سیستمی</h4>
+                                  <p class="text-sm mt-1">' . $e->getMessage() . '</p>
+                              </div>
+                          </div>
                         </div>';
         }
     } else {
-        $message = '<div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-                      <i class="fas fa-exclamation-triangle ml-2"></i>
-                      لطفاً متن پیامک را وارد کنید
+        $message = '<div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-6 py-4 rounded-xl mb-6">
+                      <div class="flex items-center">
+                          <i class="fas fa-exclamation-triangle text-yellow-500 text-xl ml-3"></i>
+                          <div>
+                              <h4 class="font-semibold">ورودی ناکامل</h4>
+                              <p class="text-sm mt-1">لطفاً متن پیامک را وارد کنید</p>
+                          </div>
+                      </div>
                     </div>';
     }
 }
 
-// کنترل تم (قالب)
+// کنترل تم
 $theme = $_GET['theme'] ?? 'light';
 $isDark = $theme === 'dark';
 
@@ -79,186 +99,238 @@ $defaultMessages = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ارسال پیامک - مدیریت درخواست پاسخگو رایانه</title>
+    <title>ارسال پیامک - سیستم مدیریت درخواست پاسخگو رایانه</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body { font-family: 'Vazir', sans-serif; }
-        <?php if ($isDark): ?>
-        .dark-theme {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
-            color: #e5e7eb;
-        }
-        .dark-card {
-            background: rgba(31, 41, 55, 0.9);
-            border: 1px solid #374151;
-        }
-        .dark-input {
-            background: #374151;
-            border: 1px solid #4b5563;
-            color: #e5e7eb;
-        }
-        .dark-input:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-        <?php endif; ?>
+        
+        /* تم تیره */
+        .dark-bg { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+        .dark-card { background: rgba(30, 41, 59, 0.95); border: 1px solid #475569; }
+        .dark-text { color: #e2e8f0; }
+        .dark-text-secondary { color: #94a3b8; }
+        .dark-input { background: #374151; border: 1px solid #475569; color: #e2e8f0; }
+        .dark-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        
+        /* تم روشن */
+        .light-bg { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); }
+        .light-card { background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .light-text { color: #1e293b; }
+        .light-text-secondary { color: #64748b; }
+        
+        /* قالب‌های پیامک */
         .message-template {
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
         .message-template:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
+        
+        /* انیمیشن‌ها */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-in { animation: slideIn 0.5s ease-out; }
     </style>
 </head>
-<body class="<?php echo $isDark ? 'dark-theme min-h-screen' : 'bg-gray-100'; ?>">
-    <!-- Navigation -->
-    <nav class="<?php echo $isDark ? 'bg-gray-800 shadow-lg' : 'bg-white shadow-lg'; ?>">
-        <div class="max-w-7xl mx-auto px-4">
+<body class="min-h-screen <?php echo $isDark ? 'dark-bg' : 'light-bg'; ?>">
+    
+    <!-- نوار ناوبری -->
+    <nav class="<?php echo $isDark ? 'bg-gray-800' : 'bg-white'; ?> shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
+                
+                <!-- لوگو و عنوان -->
                 <div class="flex items-center">
-                    <a href="dashboard.php?theme=<?php echo $theme; ?>" class="text-xl font-bold <?php echo $isDark ? 'text-white' : 'text-gray-800'; ?>">
-                        مدیریت درخواست پاسخگو رایانه
-                    </a>
-                </div>
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <!-- Navigation Menu -->
-                    <div class="hidden md:flex space-x-2 space-x-reverse">
-                        <a href="dashboard.php?theme=<?php echo $theme; ?>" class="px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                            <i class="fas fa-home ml-1"></i>داشبورد
-                        </a>
-                        <a href="requests.php?theme=<?php echo $theme; ?>" class="px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                            <i class="fas fa-list ml-1"></i>درخواست‌ها
-                        </a>
-                        <a href="view_request.php?id=<?php echo $requestId; ?>&theme=<?php echo $theme; ?>" class="px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                            <i class="fas fa-eye ml-1"></i>مشاهده درخواست
+                    <div class="flex-shrink-0">
+                        <a href="dashboard.php?theme=<?php echo $theme; ?>" class="text-xl font-bold <?php echo $isDark ? 'text-white' : 'text-gray-900'; ?>">
+                            <i class="fas fa-desktop ml-2 text-blue-500"></i>
+                            پاسخگو رایانه
                         </a>
                     </div>
+                </div>
+                
+                <!-- منوی ناوبری -->
+                <div class="hidden md:flex items-center space-x-4 space-x-reverse">
+                    <a href="dashboard.php?theme=<?php echo $theme; ?>" 
+                       class="px-3 py-2 rounded-md text-sm font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                        <i class="fas fa-home ml-1"></i>داشبورد
+                    </a>
+                    <a href="requests.php?theme=<?php echo $theme; ?>" 
+                       class="px-3 py-2 rounded-md text-sm font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                        <i class="fas fa-list ml-1"></i>درخواست‌ها
+                    </a>
+                    <a href="view_request.php?id=<?php echo $requestId; ?>&theme=<?php echo $theme; ?>" 
+                       class="px-3 py-2 rounded-md text-sm font-medium bg-blue-500 text-white rounded-md">
+                        <i class="fas fa-eye ml-1"></i>مشاهده درخواست
+                    </a>
+                </div>
+                
+                <!-- کنترل‌های راست -->
+                <div class="flex items-center space-x-4 space-x-reverse">
                     
-                    <!-- Theme Toggle -->
-                    <div class="flex space-x-2">
-                        <a href="?request_id=<?php echo $requestId; ?>&theme=light" class="px-3 py-1 rounded <?php echo !$isDark ? 'bg-blue-500 text-white' : 'bg-gray-600 text-gray-300'; ?>" title="حالت روشن">
+                    <!-- تغییر تم -->
+                    <div class="flex bg-gray-200 rounded-lg p-1">
+                        <a href="?request_id=<?php echo $requestId; ?>&theme=light" 
+                           class="px-3 py-1 rounded-md text-sm transition-colors <?php echo !$isDark ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-gray-800'; ?>">
                             <i class="fas fa-sun"></i>
                         </a>
-                        <a href="?request_id=<?php echo $requestId; ?>&theme=dark" class="px-3 py-1 rounded <?php echo $isDark ? 'bg-blue-500 text-white' : 'bg-gray-600 text-gray-300'; ?>" title="حالت تیره">
+                        <a href="?request_id=<?php echo $requestId; ?>&theme=dark" 
+                           class="px-3 py-1 rounded-md text-sm transition-colors <?php echo $isDark ? 'bg-gray-800 text-yellow-400 shadow' : 'text-gray-600 hover:text-gray-800'; ?>">
                             <i class="fas fa-moon"></i>
                         </a>
                     </div>
                     
-                    <a href="logout.php" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">خروج</a>
+                    <!-- خروج -->
+                    <a href="logout.php" 
+                       class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                        <i class="fas fa-sign-out-alt ml-1"></i>خروج
+                    </a>
+                    
+                    <!-- منوی موبایل -->
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                        <i class="fas fa-bars"></i>
+                    </button>
                 </div>
+            </div>
+        </div>
+        
+        <!-- منوی موبایل -->
+        <div id="mobile-menu" class="md:hidden hidden <?php echo $isDark ? 'bg-gray-700' : 'bg-gray-50'; ?> border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="dashboard.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                    <i class="fas fa-home ml-2"></i>داشبورد
+                </a>
+                <a href="requests.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                    <i class="fas fa-list ml-2"></i>درخواست‌ها
+                </a>
+                <a href="view_request.php?id=<?php echo $requestId; ?>&theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                    <i class="fas fa-eye ml-2"></i>مشاهده درخواست
+                </a>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
-        <!-- Request Info -->
-        <div class="<?php echo $isDark ? 'dark-card' : 'bg-white'; ?> shadow overflow-hidden sm:rounded-lg mb-6">
-            <div class="px-4 py-5 sm:px-6">
-                <h3 class="text-lg leading-6 font-medium <?php echo $isDark ? 'text-white' : 'text-gray-900'; ?>">
+    <!-- محتوای اصلی -->
+    <main class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+        
+        <!-- اطلاعات درخواست -->
+        <div class="<?php echo $isDark ? 'dark-card' : 'light-card'; ?> rounded-xl overflow-hidden mb-8 animate-slide-in">
+            <div class="px-6 py-5 border-b <?php echo $isDark ? 'border-gray-600' : 'border-gray-200'; ?>">
+                <h2 class="text-xl font-semibold <?php echo $isDark ? 'dark-text' : 'light-text'; ?>">
                     <i class="fas fa-sms ml-2 text-green-500"></i>
-                    ارسال پیامک
-                </h3>
-                <p class="mt-1 max-w-2xl text-sm <?php echo $isDark ? 'text-gray-300' : 'text-gray-500'; ?>">
-                    ارسال پیامک اطلاع‌رسانی برای درخواست
+                    ارسال پیامک اطلاع‌رسانی
+                </h2>
+                <p class="mt-1 <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> text-sm">
+                    ارسال پیامک برای اطلاع‌رسانی به مشتری درباره وضعیت درخواست
                 </p>
             </div>
             
-            <div class="border-t <?php echo $isDark ? 'border-gray-600' : 'border-gray-200'; ?>">
-                <dl>
-                    <div class="<?php echo $isDark ? 'bg-gray-700' : 'bg-gray-50'; ?> px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium <?php echo $isDark ? 'text-gray-200' : 'text-gray-500'; ?>">کد رهگیری</dt>
-                        <dd class="mt-1 text-sm <?php echo $isDark ? 'text-gray-300' : 'text-gray-900'; ?> sm:mt-0 sm:col-span-2 font-mono">
-                            <?php echo en2fa($request['tracking_code']); ?>
-                        </dd>
+            <!-- جزئیات درخواست -->
+            <div class="px-6 py-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-sm font-medium <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> block mb-1">کد رهگیری</label>
+                            <div class="<?php echo $isDark ? 'bg-gray-700' : 'bg-gray-50'; ?> px-3 py-2 rounded-lg">
+                                <span class="font-mono text-lg <?php echo $isDark ? 'dark-text' : 'light-text'; ?>"><?php echo en2fa($request['tracking_code']); ?></span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> block mb-1">عنوان درخواست</label>
+                            <div class="<?php echo $isDark ? 'bg-gray-700' : 'bg-gray-50'; ?> px-3 py-2 rounded-lg">
+                                <span class="<?php echo $isDark ? 'dark-text' : 'light-text'; ?>"><?php echo htmlspecialchars($request['title']); ?></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="<?php echo $isDark ? 'bg-gray-800' : 'bg-white'; ?> px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium <?php echo $isDark ? 'text-gray-200' : 'text-gray-500'; ?>">عنوان درخواست</dt>
-                        <dd class="mt-1 text-sm <?php echo $isDark ? 'text-gray-300' : 'text-gray-900'; ?> sm:mt-0 sm:col-span-2">
-                            <?php echo htmlspecialchars($request['title']); ?>
-                        </dd>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-sm font-medium <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> block mb-1">مشتری</label>
+                            <div class="<?php echo $isDark ? 'bg-gray-700' : 'bg-gray-50'; ?> px-3 py-2 rounded-lg">
+                                <div class="<?php echo $isDark ? 'dark-text' : 'light-text'; ?> font-medium"><?php echo htmlspecialchars($customer['name']); ?></div>
+                                <div class="<?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> font-mono text-sm"><?php echo $customer['phone']; ?></div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> block mb-1">وضعیت</label>
+                            <div class="<?php echo $isDark ? 'bg-gray-700' : 'bg-gray-50'; ?> px-3 py-2 rounded-lg">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
+                                    <?php 
+                                    switch($request['status']) {
+                                        case 'تکمیل شده': echo 'bg-green-100 text-green-800'; break;
+                                        case 'لغو شده': echo 'bg-red-100 text-red-800'; break;
+                                        default: echo 'bg-yellow-100 text-yellow-800';
+                                    }
+                                    ?>">
+                                    <?php echo $request['status']; ?>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="<?php echo $isDark ? 'bg-gray-700' : 'bg-gray-50'; ?> px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium <?php echo $isDark ? 'text-gray-200' : 'text-gray-500'; ?>">مشتری</dt>
-                        <dd class="mt-1 text-sm <?php echo $isDark ? 'text-gray-300' : 'text-gray-900'; ?> sm:mt-0 sm:col-span-2">
-                            <div class="font-medium"><?php echo htmlspecialchars($customer['name']); ?></div>
-                            <div class="text-gray-500 font-mono"><?php echo $customer['phone']; ?></div>
-                        </dd>
-                    </div>
-                    <div class="<?php echo $isDark ? 'bg-gray-800' : 'bg-white'; ?> px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium <?php echo $isDark ? 'text-gray-200' : 'text-gray-500'; ?>">وضعیت</dt>
-                        <dd class="mt-1 text-sm <?php echo $isDark ? 'text-gray-300' : 'text-gray-900'; ?> sm:mt-0 sm:col-span-2">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                <?php 
-                                switch($request['status']) {
-                                    case 'تکمیل شده': echo 'bg-green-100 text-green-800'; break;
-                                    case 'لغو شده': echo 'bg-red-100 text-red-800'; break;
-                                    default: echo 'bg-yellow-100 text-yellow-800';
-                                }
-                                ?>">
-                                <?php echo $request['status']; ?>
-                            </span>
-                        </dd>
-                    </div>
-                </dl>
+                </div>
             </div>
         </div>
 
         <?php echo $message; ?>
 
-        <!-- SMS Service Status -->
+        <!-- هشدار غیرفعال بودن سرویس -->
         <?php if (!isSMSEnabled()): ?>
-        <div class="bg-orange-100 border border-orange-400 text-orange-700 px-4 py-3 rounded mb-6">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-exclamation-triangle text-orange-400"></i>
-                </div>
-                <div class="mr-3">
-                    <p class="text-sm">
-                        <strong>توجه:</strong> سرویس پیامک غیرفعال است یا تنظیمات ناقص است.
-                        <br>برای فعال‌سازی، فایل <code>sms_config.php</code> را بررسی کنید.
+        <div class="bg-orange-50 border border-orange-200 text-orange-800 px-6 py-4 rounded-xl mb-6">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle text-orange-500 text-xl ml-3"></i>
+                <div>
+                    <h4 class="font-semibold">سرویس پیامک غیرفعال</h4>
+                    <p class="text-sm mt-1">
+                        سرویس پیامک غیرفعال است یا تنظیمات ناقص است. برای فعال‌سازی، فایل <code class="bg-orange-100 px-1 rounded">sms_config.php</code> را بررسی کنید.
                     </p>
                 </div>
             </div>
         </div>
         <?php endif; ?>
 
-        <!-- Message Templates -->
-        <div class="<?php echo $isDark ? 'dark-card' : 'bg-white'; ?> shadow overflow-hidden sm:rounded-lg mb-6">
-            <div class="px-4 py-5 sm:px-6">
-                <h3 class="text-lg leading-6 font-medium <?php echo $isDark ? 'text-white' : 'text-gray-900'; ?>">
-                    <i class="fas fa-template ml-2 text-blue-500"></i>
-                    قالب‌های آماده
+        <!-- قالب‌های آماده -->
+        <div class="<?php echo $isDark ? 'dark-card' : 'light-card'; ?> rounded-xl overflow-hidden mb-8 animate-slide-in">
+            <div class="px-6 py-5 border-b <?php echo $isDark ? 'border-gray-600' : 'border-gray-200'; ?>">
+                <h3 class="text-lg font-semibold <?php echo $isDark ? 'dark-text' : 'light-text'; ?>">
+                    <i class="fas fa-templates ml-2 text-blue-500"></i>
+                    قالب‌های آماده پیامک
                 </h3>
-                <p class="mt-1 max-w-2xl text-sm <?php echo $isDark ? 'text-gray-300' : 'text-gray-500'; ?>">
+                <p class="mt-1 <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> text-sm">
                     روی هر قالب کلیک کنید تا متن آن در فرم پایین قرار گیرد
                 </p>
             </div>
             
-            <div class="px-4 py-5 sm:p-6">
+            <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <?php foreach ($defaultMessages as $key => $msg): ?>
-                    <div class="message-template <?php echo $isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'; ?> border rounded-lg p-4" 
-                         onclick="setMessage('<?php echo addslashes($msg); ?>')">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-medium <?php echo $isDark ? 'text-gray-200' : 'text-gray-700'; ?>">
-                                <?php 
-                                $titles = [
-                                    'new_request' => 'اطلاع ثبت درخواست',
-                                    'status_update' => 'به‌روزرسانی وضعیت',
-                                    'reminder' => 'یادآوری',
-                                    'completion' => 'اطلاع تکمیل'
-                                ];
-                                echo $titles[$key];
-                                ?>
-                            </h4>
-                            <i class="fas fa-hand-pointer text-blue-500"></i>
+                    <?php 
+                    $templates = [
+                        'new_request' => ['title' => 'اطلاع ثبت درخواست', 'icon' => 'fas fa-plus-circle', 'color' => 'blue'],
+                        'status_update' => ['title' => 'به‌روزرسانی وضعیت', 'icon' => 'fas fa-sync-alt', 'color' => 'green'],
+                        'reminder' => ['title' => 'یادآوری', 'icon' => 'fas fa-bell', 'color' => 'yellow'],
+                        'completion' => ['title' => 'اطلاع تکمیل', 'icon' => 'fas fa-check-circle', 'color' => 'purple']
+                    ];
+                    
+                    foreach ($templates as $key => $template): 
+                    ?>
+                    <div class="message-template <?php echo $isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'; ?> border rounded-xl p-4" 
+                         onclick="setMessage('<?php echo addslashes($defaultMessages[$key]); ?>')">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center">
+                                <i class="<?php echo $template['icon']; ?> text-<?php echo $template['color']; ?>-500 text-lg ml-2"></i>
+                                <h4 class="font-medium <?php echo $isDark ? 'dark-text' : 'light-text'; ?>">
+                                    <?php echo $template['title']; ?>
+                                </h4>
+                            </div>
+                            <i class="fas fa-hand-pointer text-blue-500 text-sm"></i>
                         </div>
-                        <p class="mt-2 text-sm <?php echo $isDark ? 'text-gray-300' : 'text-gray-600'; ?> leading-relaxed">
-                            <?php echo htmlspecialchars(substr($msg, 0, 80)) . (strlen($msg) > 80 ? '...' : ''); ?>
+                        <p class="text-sm <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> leading-relaxed">
+                            <?php echo htmlspecialchars(substr($defaultMessages[$key], 0, 100)) . (strlen($defaultMessages[$key]) > 100 ? '...' : ''); ?>
                         </p>
                     </div>
                     <?php endforeach; ?>
@@ -266,74 +338,99 @@ $defaultMessages = [
             </div>
         </div>
 
-        <!-- SMS Form -->
-        <div class="<?php echo $isDark ? 'dark-card' : 'bg-white'; ?> shadow overflow-hidden sm:rounded-lg">
-            <div class="px-4 py-5 sm:px-6">
-                <h3 class="text-lg leading-6 font-medium <?php echo $isDark ? 'text-white' : 'text-gray-900'; ?>">
+        <!-- فرم ارسال پیامک -->
+        <div class="<?php echo $isDark ? 'dark-card' : 'light-card'; ?> rounded-xl overflow-hidden animate-slide-in">
+            <div class="px-6 py-5 border-b <?php echo $isDark ? 'border-gray-600' : 'border-gray-200'; ?>">
+                <h3 class="text-lg font-semibold <?php echo $isDark ? 'dark-text' : 'light-text'; ?>">
                     <i class="fas fa-edit ml-2 text-purple-500"></i>
-                    فرم ارسال پیامک
+                    تنظیمات و ارسال پیامک
                 </h3>
-                <p class="mt-1 max-w-2xl text-sm <?php echo $isDark ? 'text-gray-300' : 'text-gray-500'; ?>">
-                    متن پیامک خود را تایپ کنید یا از قالب‌های بالا استفاده کنید
+                <p class="mt-1 <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> text-sm">
+                    متن پیامک خود را تایپ کنید یا از قالب‌های آماده استفاده کنید
                 </p>
             </div>
             
-            <div class="px-4 py-5 sm:p-6">
+            <div class="p-6">
                 <form method="POST" class="space-y-6">
+                    
+                    <!-- ناحیه متن پیامک -->
                     <div>
-                        <label for="sms_message" class="block text-sm font-medium <?php echo $isDark ? 'text-gray-200' : 'text-gray-700'; ?> mb-2">
+                        <label for="sms_message" class="block text-sm font-medium <?php echo $isDark ? 'dark-text' : 'light-text'; ?> mb-3">
+                            <i class="fas fa-comment-alt ml-1"></i>
                             متن پیامک *
                         </label>
-                        <textarea name="sms_message" id="sms_message" rows="4" required
-                                  class="w-full <?php echo $isDark ? 'dark-input' : 'border border-gray-300'; ?> rounded-md px-3 py-2"
-                                  placeholder="متن پیامک خود را اینجا بنویسید..."
-                                  maxlength="160"><?php echo $_POST['sms_message'] ?? $defaultMessages['new_request']; ?></textarea>
-                        <div class="mt-1 flex justify-between">
-                            <span class="text-xs <?php echo $isDark ? 'text-gray-400' : 'text-gray-500'; ?>">
-                                حداکثر ۱۶۰ کاراکتر
-                            </span>
-                            <span id="charCount" class="text-xs <?php echo $isDark ? 'text-gray-400' : 'text-gray-500'; ?>">
-                                0/160
-                            </span>
+                        <div class="relative">
+                            <textarea name="sms_message" id="sms_message" rows="5" required
+                                      class="w-full <?php echo $isDark ? 'dark-input' : 'border border-gray-300'; ?> rounded-xl px-4 py-3 text-sm"
+                                      placeholder="متن پیامک خود را اینجا بنویسید..."
+                                      maxlength="160"><?php echo $_POST['sms_message'] ?? $defaultMessages['new_request']; ?></textarea>
+                            <div class="absolute bottom-3 left-3">
+                                <span id="charCount" class="text-xs <?php echo $isDark ? 'text-gray-400' : 'text-gray-500'; ?> bg-white px-2 py-1 rounded-full">
+                                    0/160
+                                </span>
+                            </div>
                         </div>
+                        <p class="text-xs <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> mt-2">
+                            <i class="fas fa-info-circle ml-1"></i>
+                            حداکثر ۱۶۰ کاراکتر برای یک پیامک استاندارد
+                        </p>
                     </div>
 
                     <?php if (SMS_PATTERN_NEW_REQUEST): ?>
-                    <div class="flex items-center">
-                        <input type="checkbox" name="use_pattern" value="yes" id="use_pattern"
-                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <label for="use_pattern" class="mr-2 block text-sm <?php echo $isDark ? 'text-gray-200' : 'text-gray-700'; ?>">
-                            استفاده از الگوی از پیش تعریف شده (اگر متن بالا را تغییر ندهید)
-                        </label>
+                    <!-- گزینه استفاده از الگو -->
+                    <div class="<?php echo $isDark ? 'bg-gray-700' : 'bg-blue-50'; ?> p-4 rounded-xl">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="use_pattern" value="yes" id="use_pattern"
+                                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="use_pattern" class="mr-3 text-sm <?php echo $isDark ? 'dark-text' : 'light-text'; ?>">
+                                <i class="fas fa-magic ml-1"></i>
+                                استفاده از الگوی از پیش تعریف شده (اگر متن بالا را تغییر ندهید)
+                            </label>
+                        </div>
                     </div>
                     <?php endif; ?>
 
-                    <div class="flex justify-between items-center">
-                        <div class="text-sm <?php echo $isDark ? 'text-gray-300' : 'text-gray-600'; ?>">
-                            <i class="fas fa-mobile-alt ml-1"></i>
-                            ارسال به: <strong><?php echo $customer['phone']; ?></strong>
-                        </div>
-                        <div class="flex gap-3">
-                            <a href="view_request.php?id=<?php echo $requestId; ?>&theme=<?php echo $theme; ?>" 
-                               class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200">
-                                <i class="fas fa-arrow-right ml-2"></i>
-                                بازگشت
-                            </a>
-                            <button type="submit" 
-                                    class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition duration-200"
-                                    <?php echo !isSMSEnabled() ? 'disabled title="سرویس پیامک غیرفعال است"' : ''; ?>>
-                                <i class="fas fa-paper-plane ml-2"></i>
-                                ارسال پیامک
-                            </button>
+                    <!-- اطلاعات گیرنده و دکمه‌ها -->
+                    <div class="<?php echo $isDark ? 'bg-gray-700' : 'bg-gray-50'; ?> p-4 rounded-xl">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-mobile-alt text-green-500 text-lg ml-2"></i>
+                                <div>
+                                    <span class="text-sm <?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?>">ارسال به:</span>
+                                    <div class="font-semibold <?php echo $isDark ? 'dark-text' : 'light-text'; ?>"><?php echo $customer['phone']; ?></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-3">
+                                <a href="view_request.php?id=<?php echo $requestId; ?>&theme=<?php echo $theme; ?>" 
+                                   class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium">
+                                    <i class="fas fa-arrow-right ml-2"></i>
+                                    بازگشت
+                                </a>
+                                <button type="submit" 
+                                        class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors text-sm font-medium <?php echo !isSMSEnabled() ? 'opacity-50 cursor-not-allowed' : ''; ?>"
+                                        <?php echo !isSMSEnabled() ? 'disabled title="سرویس پیامک غیرفعال است"' : ''; ?>>
+                                    <i class="fas fa-paper-plane ml-2"></i>
+                                    ارسال پیامک
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
+        
+    </main>
 
+    <!-- جاوا اسکریپت -->
     <script>
-        // Character counter
+        // منوی موبایل
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // شمارشگر کاراکتر
         const messageTextarea = document.getElementById('sms_message');
         const charCount = document.getElementById('charCount');
         
@@ -342,23 +439,39 @@ $defaultMessages = [
             charCount.textContent = length + '/160';
             
             if (length > 160) {
-                charCount.classList.add('text-red-500');
-                charCount.classList.remove('<?php echo $isDark ? "text-gray-400" : "text-gray-500"; ?>');
+                charCount.classList.add('text-red-500', 'bg-red-100');
+                charCount.classList.remove('<?php echo $isDark ? "text-gray-400" : "text-gray-500"; ?>', 'bg-white');
+            } else if (length > 140) {
+                charCount.classList.add('text-yellow-600', 'bg-yellow-100');
+                charCount.classList.remove('<?php echo $isDark ? "text-gray-400" : "text-gray-500"; ?>', 'bg-white', 'text-red-500', 'bg-red-100');
             } else {
-                charCount.classList.remove('text-red-500');
-                charCount.classList.add('<?php echo $isDark ? "text-gray-400" : "text-gray-500"; ?>');
+                charCount.classList.remove('text-red-500', 'bg-red-100', 'text-yellow-600', 'bg-yellow-100');
+                charCount.classList.add('<?php echo $isDark ? "text-gray-400" : "text-gray-500"; ?>', 'bg-white');
             }
         }
         
         messageTextarea.addEventListener('input', updateCharCount);
-        updateCharCount(); // Initial count
+        updateCharCount(); // شمارش اولیه
         
-        // Set message from template
+        // تنظیم متن از قالب
         function setMessage(message) {
             messageTextarea.value = message;
             updateCharCount();
             messageTextarea.focus();
+            
+            // انیمیشن کوتاه برای نشان دادن تغییر
+            messageTextarea.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                messageTextarea.style.transform = 'scale(1)';
+            }, 200);
         }
+        
+        // بستن منوی موبایل در صفحات بزرگ
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>
