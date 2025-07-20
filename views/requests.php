@@ -1,8 +1,4 @@
 <?php
-session_start();
-require_once 'config.php';
-require_once 'functions.php';
-
 checkLogin();
 
 // کنترل تم
@@ -10,134 +6,10 @@ $theme = $_GET['theme'] ?? 'light';
 $isDark = $theme === 'dark';
 
 $requests = getAllRequests();
+$pageTitle = 'مدیریت درخواست‌ها - پاسخگو رایانه';
+include '../templates/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدیریت درخواست‌ها - سیستم مدیریت درخواست پاسخگو رایانه</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { font-family: 'Vazir', sans-serif; }
-        
-        /* تم تیره */
-        .dark-bg { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
-        .dark-card { background: rgba(30, 41, 59, 0.95); border: 1px solid #475569; }
-        .dark-text { color: #e2e8f0; }
-        .dark-text-secondary { color: #94a3b8; }
-        
-        /* تم روشن */
-        .light-bg { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); }
-        .light-card { background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .light-text { color: #1e293b; }
-        .light-text-secondary { color: #64748b; }
-        
-        /* انیمیشن‌ها */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-slide-in { animation: slideIn 0.5s ease-out; }
-        
-        /* ردیف جدول */
-        .table-row {
-            transition: all 0.2s ease;
-        }
-        .table-row:hover {
-            transform: translateX(4px);
-        }
-    </style>
-</head>
-<body class="min-h-screen <?php echo $isDark ? 'dark-bg' : 'light-bg'; ?>">
-    
-    <!-- نوار ناوبری -->
-    <nav class="<?php echo $isDark ? 'bg-gray-800' : 'bg-white'; ?> shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                
-                <!-- لوگو و عنوان -->
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <a href="dashboard.php?theme=<?php echo $theme; ?>" class="text-xl font-bold <?php echo $isDark ? 'text-white' : 'text-gray-900'; ?>">
-                            <i class="fas fa-desktop ml-2 text-blue-500"></i>
-                            پاسخگو رایانه
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- منوی ناوبری -->
-                <div class="hidden md:flex items-center space-x-4 space-x-reverse">
-                    <a href="dashboard.php?theme=<?php echo $theme; ?>" 
-                       class="px-3 py-2 rounded-md text-sm font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                        <i class="fas fa-home ml-1"></i>داشبورد
-                    </a>
-                    <a href="new_request.php?theme=<?php echo $theme; ?>" 
-                       class="px-3 py-2 rounded-md text-sm font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                        <i class="fas fa-plus-circle ml-1"></i>درخواست جدید
-                    </a>
-                    <a href="search_requests.php?theme=<?php echo $theme; ?>" 
-                       class="px-3 py-2 rounded-md text-sm font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                        <i class="fas fa-search ml-1"></i>جستجو
-                    </a>
-                    <a href="customers.php?theme=<?php echo $theme; ?>" 
-                       class="px-3 py-2 rounded-md text-sm font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                        <i class="fas fa-users ml-1"></i>مشتریان
-                    </a>
-                </div>
-                
-                <!-- کنترل‌های راست -->
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    
-                    <!-- تغییر تم -->
-                    <div class="flex bg-gray-200 rounded-lg p-1">
-                        <a href="?theme=light" 
-                           class="px-3 py-1 rounded-md text-sm transition-colors <?php echo !$isDark ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-gray-800'; ?>">
-                            <i class="fas fa-sun"></i>
-                        </a>
-                        <a href="?theme=dark" 
-                           class="px-3 py-1 rounded-md text-sm transition-colors <?php echo $isDark ? 'bg-gray-800 text-yellow-400 shadow' : 'text-gray-600 hover:text-gray-800'; ?>">
-                            <i class="fas fa-moon"></i>
-                        </a>
-                    </div>
-                    
-                    <!-- خروج -->
-                    <a href="logout.php" 
-                       class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                        <i class="fas fa-sign-out-alt ml-1"></i>خروج
-                    </a>
-                    
-                    <!-- منوی موبایل -->
-                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- منوی موبایل -->
-        <div id="mobile-menu" class="md:hidden hidden <?php echo $isDark ? 'bg-gray-700' : 'bg-gray-50'; ?> border-t">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="dashboard.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                    <i class="fas fa-home ml-2"></i>داشبورد
-                </a>
-                <a href="new_request.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                    <i class="fas fa-plus-circle ml-2"></i>درخواست جدید
-                </a>
-                <a href="search_requests.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                    <i class="fas fa-search ml-2"></i>جستجو
-                </a>
-                <a href="customers.php?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
-                    <i class="fas fa-users ml-2"></i>مشتریان
-                </a>
-            </div>
-        </div>
-    </nav>
 
-    <!-- محتوای اصلی -->
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         
         <!-- عنوان و اقدامات سریع -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 animate-slide-in">
@@ -152,12 +24,12 @@ $requests = getAllRequests();
             </div>
             
             <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
-                <a href="search_requests.php?theme=<?php echo $theme; ?>" 
+                <a href="search-requests?theme=<?php echo $theme; ?>" 
                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
                     <i class="fas fa-search ml-2"></i>
                     جستجوی پیشرفته
                 </a>
-                <a href="new_request.php?theme=<?php echo $theme; ?>" 
+                <a href="new-request?theme=<?php echo $theme; ?>" 
                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
                     <i class="fas fa-plus-circle ml-2"></i>
                     درخواست جدید
@@ -240,7 +112,7 @@ $requests = getAllRequests();
                     <i class="fas fa-inbox text-6xl <?php echo $isDark ? 'text-gray-400' : 'text-gray-300'; ?> mb-4"></i>
                     <h3 class="text-lg font-medium <?php echo $isDark ? 'dark-text' : 'light-text'; ?> mb-2">هیچ درخواستی یافت نشد</h3>
                     <p class="<?php echo $isDark ? 'dark-text-secondary' : 'light-text-secondary'; ?> mb-6">هنوز درخواستی ثبت نشده است</p>
-                    <a href="new_request.php?theme=<?php echo $theme; ?>" 
+                    <a href="new-request?theme=<?php echo $theme; ?>" 
                        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                         <i class="fas fa-plus-circle ml-2"></i>
                         اولین درخواست را ثبت کنید
@@ -315,15 +187,15 @@ $requests = getAllRequests();
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center gap-2">
-                                    <a href="view_request.php?id=<?php echo $request['id']; ?>&theme=<?php echo $theme; ?>" 
+                                    <a href="view-request?id=<?php echo $request['id']; ?>&theme=<?php echo $theme; ?>" 
                                        class="text-blue-600 hover:text-blue-900 text-sm" title="مشاهده جزئیات">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="edit_request.php?id=<?php echo $request['id']; ?>&theme=<?php echo $theme; ?>" 
+                                    <a href="edit-request?id=<?php echo $request['id']; ?>&theme=<?php echo $theme; ?>" 
                                        class="text-green-600 hover:text-green-900 text-sm" title="ویرایش">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="print_receipt.php?id=<?php echo $request['id']; ?>" 
+                                    <a href="print-receipt?id=<?php echo $request['id']; ?>" 
                                        class="text-purple-600 hover:text-purple-900 text-sm" title="چاپ رسید">
                                         <i class="fas fa-print"></i>
                                     </a>
@@ -376,5 +248,4 @@ $requests = getAllRequests();
             }
         });
     </script>
-</body>
-</html>
+<?php include '../templates/footer.php'; ?>

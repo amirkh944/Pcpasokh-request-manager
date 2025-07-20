@@ -1,12 +1,10 @@
 <?php
-session_start();
-require_once 'config.php';
-require_once 'functions.php';
-require_once 'sms_config.php';
-
 checkLogin();
 
 $message = '';
+$pageTitle = 'درخواست جدید - پاسخگو رایانه';
+include '../templates/header.php';
+?>
 $customers = getAllCustomers();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -405,7 +403,7 @@ $isDark = $theme === 'dark';
 
             <!-- دکمه‌های عملیات -->
             <div class="flex flex-col sm:flex-row gap-3 justify-end animate-slide-in">
-                <a href="dashboard.php?theme=<?php echo $theme; ?>" 
+                <a href="dashboard?theme=<?php echo $theme; ?>" 
                    class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors text-center">
                     <i class="fas fa-times ml-2"></i>
                     انصراف
@@ -491,5 +489,4 @@ $isDark = $theme === 'dark';
             }
         });
     </script>
-</body>
-</html>
+<?php include '../templates/footer.php'; ?>
