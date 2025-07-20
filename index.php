@@ -30,6 +30,7 @@ $routes = [
     'print-customer' => 'views/print_customer.php',
     'print-receipt' => 'views/print_receipt.php',
     'send-sms' => 'views/send_sms.php',
+    'track-request' => 'views/track_request.php',
     'logout' => 'views/logout.php'
 ];
 
@@ -56,7 +57,8 @@ $pageTitles = [
     'view-customer' => 'مشاهده مشتری - پاسخگو رایانه',
     'print-customer' => 'چاپ اطلاعات مشتری - پاسخگو رایانه',
     'print-receipt' => 'چاپ رسید - پاسخگو رایانه',
-    'send-sms' => 'ارسال پیامک - پاسخگو رایانه'
+    'send-sms' => 'ارسال پیامک - پاسخگو رایانه',
+    'track-request' => 'پیگیری درخواست - پاسخگو رایانه'
 ];
 
 $pageTitle = $pageTitles[$request] ?? 'سیستم مدیریت درخواست پاسخگو رایانه';

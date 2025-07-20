@@ -83,6 +83,10 @@ $isDark = $theme === 'dark';
                        class="px-3 py-2 rounded-md text-sm font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
                         <i class="fas fa-plus-circle ml-1"></i>درخواست جدید
                     </a>
+                    <a href="track-request?theme=<?php echo $theme; ?>" 
+                       class="px-3 py-2 rounded-md text-sm font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                        <i class="fas fa-search ml-1"></i>پیگیری
+                    </a>
                     <a href="search-requests?theme=<?php echo $theme; ?>" 
                        class="px-3 py-2 rounded-md text-sm font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
                         <i class="fas fa-search ml-1"></i>جستجو
@@ -150,6 +154,9 @@ $isDark = $theme === 'dark';
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="new-request?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
                     <i class="fas fa-plus-circle ml-2"></i>درخواست جدید
+                </a>
+                <a href="track-request?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
+                    <i class="fas fa-search ml-2"></i>پیگیری
                 </a>
                 <a href="search-requests?theme=<?php echo $theme; ?>" class="block px-3 py-2 rounded-md text-base font-medium <?php echo $isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'; ?>">
                     <i class="fas fa-search ml-2"></i>جستجو

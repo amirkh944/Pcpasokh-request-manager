@@ -1,9 +1,4 @@
 <?php
-session_start();
-require_once 'config.php';
-require_once 'functions.php';
-require_once 'sms_config.php';
-
 checkLogin();
 
 $requestId = $_GET['request_id'] ?? 0;
@@ -13,12 +8,12 @@ $message = '';
 if ($requestId) {
     $request = getRequest($requestId);
     if (!$request) {
-        header('Location: dashboard.php');
+        header('Location: dashboard');
         exit;
     }
     $customer = getCustomer($request['customer_id']);
 } else {
-    header('Location: dashboard.php');
+    header('Location: dashboard');
     exit;
 }
 
@@ -93,16 +88,10 @@ $defaultMessages = [
     'reminder' => "یادآوری: درخواست شما با کد {$request['tracking_code']} در دست بررسی است. پاسخگو رایانه",
     'completion' => "درخواست شما با کد {$request['tracking_code']} تکمیل شد. لطفاً جهت تحویل مراجعه فرمایید. پاسخگو رایانه"
 ];
+
+$pageTitle = 'ارسال پیامک - پاسخگو رایانه';
+include '../templates/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ارسال پیامک - سیستم مدیریت درخواست پاسخگو رایانه</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body { font-family: 'Vazir', sans-serif; }
         
@@ -402,7 +391,7 @@ $defaultMessages = [
                             </div>
                             
                             <div class="flex gap-3">
-                                <a href="view_request.php?id=<?php echo $requestId; ?>&theme=<?php echo $theme; ?>" 
+                                <a href="view-request?id=<?php echo $requestId; ?>&theme=<?php echo $theme; ?>" 
                                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium">
                                     <i class="fas fa-arrow-right ml-2"></i>
                                     بازگشت
@@ -473,5 +462,4 @@ $defaultMessages = [
             }
         });
     </script>
-</body>
-</html>
+<?php include '../templates/footer.php'; ?>

@@ -9,7 +9,8 @@
 ├── .htaccess             # تنظیمات URL rewriting
 ├── includes/             # فایل‌های شامل و توابع
 │   ├── config.php        # تنظیمات پایگاه داده
-│   └── functions.php     # توابع اصلی
+│   ├── functions.php     # توابع اصلی
+│   └── sms_config.php    # تنظیمات ارسال پیامک
 ├── templates/            # قالب‌های HTML
 │   ├── header.php        # هدر و منوی ناوبری
 │   └── footer.php        # فوتر
@@ -18,6 +19,7 @@
     ├── login.php         # صفحه ورود
     ├── customers.php     # مدیریت مشتریان
     ├── requests.php      # مدیریت درخواست‌ها
+    ├── track_request.php # پیگیری درخواست
     └── ...              # سایر صفحات
 ```
 
@@ -45,6 +47,7 @@ http://your-domain/dashboard
 http://your-domain/customers
 http://your-domain/requests
 http://your-domain/new-request
+http://your-domain/track-request
 ```
 
 #### پارامترهای URL
