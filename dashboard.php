@@ -12,7 +12,10 @@ $isDark = $theme === 'dark';
 // دریافت آمار کلی
 $stats = getStats();
 $recentRequests = array_slice(getAllRequests(), 0, 5);
+
+// آمار برای چارت‌ها
 $weeklyStats = getWeeklyStats();
+$monthlyStats = getMonthlyStats();
 $statusStats = getStatusStats();
 ?>
 <!DOCTYPE html>
