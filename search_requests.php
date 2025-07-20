@@ -239,6 +239,10 @@ $isDark = $theme === 'dark';
                                        class="text-purple-600 hover:text-purple-900 transition duration-200" title="چاپ رسید">
                                         <i class="fas fa-print"></i>
                                     </a>
+                                    <a href="send_sms.php?request_id=<?php echo $request['id']; ?>&theme=<?php echo $theme; ?>" 
+                                       class="text-green-600 hover:text-green-900 transition duration-200" title="ارسال پیامک">
+                                        <i class="fas fa-sms"></i>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
