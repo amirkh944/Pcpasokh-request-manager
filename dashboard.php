@@ -12,10 +12,13 @@ $recentRequests = array_slice(getAllRequests(), 0, 5);
 $theme = $_GET['theme'] ?? 'light';
 $isDark = $theme === 'dark';
 
+
 // آمار برای چارت‌ها
 $weeklyStats = getWeeklyStats();
 $monthlyStats = getMonthlyStats();
 $statusStats = getStatusStats();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -38,6 +41,7 @@ $statusStats = getStatusStats();
             background: rgba(31, 41, 55, 0.9);
             border: 1px solid #374151;
         }
+
         .dark-widget {
             background: rgba(31, 41, 55, 0.8) !important;
             backdrop-filter: blur(10px);
@@ -68,6 +72,8 @@ $statusStats = getStatusStats();
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
+
+        <?php endif; ?>
     </style>
 </head>
 <body class="<?php echo $isDark ? 'dark-theme min-h-screen' : 'bg-gray-100'; ?>">
@@ -79,6 +85,7 @@ $statusStats = getStatusStats();
                     <h1 class="text-xl font-bold <?php echo $isDark ? 'text-white' : 'text-gray-800'; ?>">مدیریت درخواست پاسخگو رایانه</h1>
                 </div>
                 <div class="flex items-center space-x-4 space-x-reverse">
+
                     <!-- Navigation Menu -->
                     <div class="hidden md:flex space-x-2 space-x-reverse">
                         <a href="new_request.php?theme=<?php echo $theme; ?>" class="px-3 py-2 rounded <?php echo $isDark ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'; ?>">
@@ -106,6 +113,8 @@ $statusStats = getStatusStats();
                     </div>
                     
                     <span class="<?php echo $isDark ? 'text-gray-300' : 'text-gray-700'; ?> hidden sm:block">خوش آمدید، <?php echo $_SESSION['username']; ?></span>
+
+                    <span class="<?php echo $isDark ? 'text-gray-300' : 'text-gray-700'; ?>">خوش آمدید، <?php echo $_SESSION['username']; ?></span>
                     
                     <!-- Theme Toggle -->
                     <div class="flex space-x-2">
@@ -145,6 +154,7 @@ $statusStats = getStatusStats();
     </nav>
 
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+
         <!-- Quick Actions Menu -->
         <div class="<?php echo $isDark ? 'dark-card' : 'bg-white'; ?> overflow-hidden shadow rounded-lg mb-6">
             <div class="px-4 py-5 sm:p-6">
@@ -152,6 +162,15 @@ $statusStats = getStatusStats();
                 <div class="widget-grid">
                     <a href="new_request.php?theme=<?php echo $theme; ?>" class="<?php echo $isDark ? 'dark-widget' : 'bg-gradient-to-r from-blue-500 to-blue-600 light-widget'; ?> p-4 rounded-lg text-center widget-hover">
                         <i class="fas fa-plus-circle text-2xl mb-2 block"></i>
+                    <a href="new_request.php?theme=<?php echo $theme; ?>" class="<?php echo $isDark ? 'dark-widget' : 'bg-gradient-to-r from-blue-500 to-blue-600'; ?> text-white p-4 rounded-lg text-center hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+
+        <!-- Menu -->
+        <div class="<?php echo $isDark ? 'dark-card' : 'bg-white'; ?> overflow-hidden shadow rounded-lg mb-6">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <a href="new_request.php?theme=<?php echo $theme; ?>" class="bg-blue-500 text-white p-4 rounded-lg text-center hover:bg-blue-600 transition">
+
+                        <i class="fas fa-plus-circle text-2xl mb-2"></i>
                         <div class="font-medium">درخواست جدید</div>
                     </a>
                     <a href="search_requests.php?theme=<?php echo $theme; ?>" class="<?php echo $isDark ? 'dark-widget' : 'bg-gradient-to-r from-green-500 to-green-600 light-widget'; ?> p-4 rounded-lg text-center widget-hover">
@@ -160,6 +179,12 @@ $statusStats = getStatusStats();
                     </a>
                     <a href="requests.php?theme=<?php echo $theme; ?>" class="<?php echo $isDark ? 'dark-widget' : 'bg-gradient-to-r from-purple-500 to-purple-600 light-widget'; ?> p-4 rounded-lg text-center widget-hover">
                         <i class="fas fa-list text-2xl mb-2 block"></i>
+
+                    <a href="requests.php?theme=<?php echo $theme; ?>" class="<?php echo $isDark ? 'dark-widget' : 'bg-gradient-to-r from-purple-500 to-purple-600'; ?> text-white p-4 rounded-lg text-center hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+
+                    <a href="requests.php?theme=<?php echo $theme; ?>" class="bg-green-500 text-white p-4 rounded-lg text-center hover:bg-green-600 transition">
+
+                        <i class="fas fa-list text-2xl mb-2"></i>
                         <div class="font-medium">مدیریت درخواست‌ها</div>
                     </a>
                     <a href="customers.php?theme=<?php echo $theme; ?>" class="<?php echo $isDark ? 'dark-widget' : 'bg-gradient-to-r from-indigo-500 to-indigo-600 light-widget'; ?> p-4 rounded-lg text-center widget-hover">
@@ -181,6 +206,27 @@ $statusStats = getStatusStats();
                     <?php if ($_SESSION['is_admin']): ?>
                     <a href="users.php?theme=<?php echo $theme; ?>" class="<?php echo $isDark ? 'dark-widget' : 'bg-gradient-to-r from-red-500 to-red-600 light-widget'; ?> p-4 rounded-lg text-center widget-hover">
                         <i class="fas fa-user-cog text-2xl mb-2 block"></i>
+                    <a href="users.php?theme=<?php echo $theme; ?>" class="<?php echo $isDark ? 'dark-widget' : 'bg-gradient-to-r from-red-500 to-red-600'; ?> text-white p-4 rounded-lg text-center hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+
+                    <a href="customers.php?theme=<?php echo $theme; ?>" class="bg-purple-500 text-white p-4 rounded-lg text-center hover:bg-purple-600 transition">
+                        <i class="fas fa-users text-2xl mb-2"></i>
+                        <div>مشاهده مشتریان</div>
+                    </a>
+                    <a href="contacts.php?theme=<?php echo $theme; ?>" class="bg-orange-500 text-white p-4 rounded-lg text-center hover:bg-orange-600 transition">
+                        <i class="fas fa-user-plus text-2xl mb-2"></i>
+                        <div>ثبت مشتری جدید</div>
+                    </a>
+                    <a href="communications.php?theme=<?php echo $theme; ?>" class="bg-indigo-500 text-white p-4 rounded-lg text-center hover:bg-indigo-600 transition">
+                        <i class="fas fa-phone text-2xl mb-2"></i>
+                        <div>مدیریت ارتباطات</div>
+                    </a>
+                    <a href="payments.php?theme=<?php echo $theme; ?>" class="bg-yellow-500 text-white p-4 rounded-lg text-center hover:bg-yellow-600 transition">
+                        <i class="fas fa-credit-card text-2xl mb-2"></i>
+                        <div>مدیریت مالی</div>
+                    </a>
+                    <?php if ($_SESSION['is_admin']): ?>
+                    <a href="users.php?theme=<?php echo $theme; ?>" class="bg-red-500 text-white p-4 rounded-lg text-center hover:bg-red-600 transition">
+                        <i class="fas fa-user-cog text-2xl mb-2"></i>
                         <div class="font-medium">مدیریت کاربران</div>
                     </a>
                     <?php endif; ?>
