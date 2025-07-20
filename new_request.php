@@ -2,6 +2,7 @@
 session_start();
 require_once 'config.php';
 require_once 'functions.php';
+require_once 'sms_config.php';
 
 checkLogin();
 
@@ -40,9 +41,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // ایجاد درخواست
         $requestId = createRequest($customerId, $title, $deviceModel, $imei1, $imei2, $problemDescription, $estimatedDuration, $actionsRequired, $cost);
         
+        // دریافت کد رهگیری
+        $request = getRequest($requestId);
+        $trackingCode = $request['tracking_code'];
+        
+        // ارسال پیامک اطلاع‌رسانی
+        $smsResult = sendNewRequestSMS($customerPhone, $trackingCode, $title);
+        
+        $smsStatus = $smsResult['success'] ? 
+            '<div class="bg-blue-100 border border-blue-400 text-blue-700 px-3 py-2 rounded text-sm mt-2">
+                پیامک اطلاع‌رسانی ارسال شد
+            </div>' : 
+            '<div class="bg-orange-100 border border-orange-400 text-orange-700 px-3 py-2 rounded text-sm mt-2">
+                خطا در ارسال پیامک: ' . $smsResult['message'] . '
+            </div>';
+        
         $message = '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                      درخواست با موفقیت ثبت شد. 
-                      <a href="print_receipt.php?id=' . $requestId . '" class="underline">چاپ رسید</a>
+                      درخواست با موفقیت ثبت شد. کد رهگیری: <strong>' . en2fa($trackingCode) . '</strong>
+                      <br><a href="print_receipt.php?id=' . $requestId . '" class="underline">چاپ رسید</a>
+                      ' . $smsStatus . '
                     </div>';
         
         // پاک کردن فرم
